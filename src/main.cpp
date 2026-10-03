@@ -9,14 +9,16 @@
 #define PORT		8080
 
 std::shared_ptr<std::string> webcontent() {
+
+	std::string content = "Hello, World!";
+
 	std::string headers = 
 		"HTTP/1.1 200 OK\r\n"
 		"Content-Type: text/plain\r\n"
-		"Content-Length: %zu\r\n"
+		"Content-Length: " + std::to_string(content.size()) + "\r\n"
 		"Connection: close\r\n"
 		"\r\n";
 
-	std::string content = "Hello, World!";
 
 	std::shared_ptr<std::string> resp =
 		std::make_shared<std::string>(
