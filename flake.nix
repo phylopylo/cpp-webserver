@@ -22,10 +22,16 @@
 					# Debugging Tools
 					gdb
 					valgrind
+					
+					# Documentation
+					man
+					man-pages
+					man-pages-posix
 				];
 
 				shellHook = ''
-				  PS1="\n\[\033[1;32m\][\u@\h \[\033[1;34m\](C++)\[\033[1;32m\]:\w]\$\[\033[0m\] "
+					export MANPATH="${pkgs.man-pages}/share/man:${pkgs.man-pages-posix}/share/man:$MANPATH"
+					PS1="\n\[\033[1;32m\][\u@\h \[\033[1;34m\](C++)\[\033[1;32m\]:\w]\$\[\033[0m\] "
 				'';
 			};
 		});
