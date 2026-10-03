@@ -3,6 +3,7 @@
 #include <cstring>
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include <unistd.h>
 
 #define HOSTNAME	INADDR_ANY
 #define PORT		8080
@@ -25,7 +26,7 @@ std::shared_ptr<std::string> webcontent() {
 	return resp;
 }
 
-void server() {
+int server() {
 	std::cout << "web server starting up. opening socket." << std::endl;
 	int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -42,7 +43,10 @@ void server() {
 
 	bind(serverSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress));
 	listen(serverSocket, 5);
+	return serverSocket;
+}
 
+void recieve(int serverSocket) {
 	int clientSocket = accept(serverSocket, nullptr, nullptr);
 	char buffer[1024] = {0};
 	ssize_t n = recv(clientSocket, buffer, sizeof(buffer), 0);
@@ -56,10 +60,21 @@ void server() {
 
 	if (sent < 0) {
 		std::cout << "error! didnt send!!!" << std::endl;
+	} else {
+		std::cout << "sent with code " << sent << std::endl;
 	};
+	shutdown(clientSocket, SHUT_WR);
+	close(clientSocket);
 }
 
 int main() {
-	server();
+	int serverSocket = server();
+	if(serverSocket < 0) {
+		std::cout << "failed to initialize socket with code " << serverSocket << std::endl;
+		return 0;
+	}
+	std::cout << "Accepting new connections on socket " << serverSocket << std::endl;
+	while (1)
+		recieve(serverSocket);
 	return 0;
 }
