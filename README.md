@@ -4,18 +4,32 @@
 
 Using `wrk`:
 
-For 1000 connections, an average 125 microseconds of latency.
+FastAPI:
 
 ```
-[sci@dell (C++):~/cpp-webserver]$ wrk -c1000 -d1s http://localhost:8080/
-Running 1s test @ http://localhost:8080/
-  2 threads and 1000 connections
+[sci@dell (C++):~/cpp-webserver]$ wrk -t 32 -c1000 -d1s http://localhost:8000
+Running 1s test @ http://localhost:8000
+  32 threads and 1000 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency   125.84us   49.19us   2.08ms   80.77%
-    Req/Sec    15.65k    10.35k   28.32k    60.00%
-  31103 requests in 1.04s, 2.88MB read
-Requests/sec:  29967.24
-Transfer/sec:      2.77MB
+    Latency   333.11ms   68.02ms 488.83ms   73.39%
+    Req/Sec    99.75     67.20   300.00     75.20%
+  2589 requests in 1.10s, 359.27KB read
+Requests/sec:   2353.66
+Transfer/sec:    326.61KB
+```
+
+Single thread C++ web server:
+```
+
+[sci@dell (C++):~/cpp-webserver]$ wrk -t 32 -c1000 -d1s http://localhost:8080
+Running 1s test @ http://localhost:8080
+  32 threads and 1000 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency     8.40ms   67.26ms 942.53ms   98.00%
+    Req/Sec     1.32k     2.62k   17.06k    91.89%
+  18258 requests in 1.10s, 1.69MB read
+Requests/sec:  16590.90
+Transfer/sec:      1.53MB
 
 [sci@dell (C++):~/cpp-webserver]$ 
 ```
