@@ -22,6 +22,9 @@
 					# Debugging Tools
 					gdb
 					valgrind
+
+					# Benchmarking
+					wrk
 					
 					# Documentation
 					man
