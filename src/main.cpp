@@ -53,8 +53,12 @@ int server() {
 	return serverSocket;
 }
 
-void recieve(int serverSocket) {
+int recieve(int serverSocket) {
 	int clientSocket = accept(serverSocket, nullptr, nullptr);
+	return clientSocket;
+}
+
+void respond(int clientSocket) {
 	char buffer[1024] = {0};
 	ssize_t n = recv(clientSocket, buffer, sizeof(buffer), 0);
 
@@ -76,7 +80,8 @@ void recieve(int serverSocket) {
 
 void recieveLoop(int serverSocket) {
 	while(!isFinished) {
-		recieve(serverSocket);
+		int clientSocket = recieve(serverSocket);
+		respond(clientSocket);
 	};
 }
 
