@@ -1,12 +1,15 @@
 #include <iostream>
 #include <memory>
 #include <cstring>
+#include <thread>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
 #define HOSTNAME	INADDR_ANY
 #define PORT		8080
+
+static bool isFinished(0);
 
 std::shared_ptr<std::string> webcontent() {
 
@@ -69,6 +72,12 @@ void recieve(int serverSocket) {
 	close(clientSocket);
 }
 
+void recieveLoop(int serverSocket) {
+	while(!isFinished) {
+		recieve(serverSocket);
+	};
+}
+
 int main() {
 	int serverSocket = server();
 	if(serverSocket < 0) {
@@ -76,7 +85,10 @@ int main() {
 		return 0;
 	}
 	std::cout << "Accepting new connections on socket " << serverSocket << std::endl;
-	while (1)
-		recieve(serverSocket);
+	std::thread thread(recieveLoop, serverSocket);
+
+
+
+	thread.join();
 	return 0;
 }
