@@ -49,7 +49,7 @@ int server() {
 	serverAddress.sin_addr.s_addr = HOSTNAME;
 
 	bind(serverSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress));
-	listen(serverSocket, 5);
+	listen(serverSocket, 1000);
 	return serverSocket;
 }
 
