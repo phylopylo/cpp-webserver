@@ -2,12 +2,14 @@
 #include <memory>
 #include <cstring>
 #include <thread>
+#include <vector>
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <unistd.h>
 
 #define HOSTNAME	INADDR_ANY
 #define PORT		8080
+#define NUM_THREADS	10
 
 static bool isFinished(0);
 
@@ -84,11 +86,19 @@ int main() {
 		std::cout << "failed to initialize socket with code " << serverSocket << std::endl;
 		return 0;
 	}
+
+	std::vector<std::thread> threads;
+	threads.reserve(NUM_THREADS);
+
+	for (int i(0); i < NUM_THREADS; i++) {
+		threads.emplace_back(recieveLoop, serverSocket);
+	};
+
+
 	std::cout << "Accepting new connections on socket " << serverSocket << std::endl;
-	std::thread thread(recieveLoop, serverSocket);
 
+	for (std::thread& thread : threads)
+		thread.join();
 
-
-	thread.join();
 	return 0;
 }
